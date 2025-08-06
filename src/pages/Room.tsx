@@ -171,7 +171,7 @@ export default function Room() {
                 </div>
                 <div>
                   <label className="text-sm text-muted-foreground">
-                    Partner name
+                    Partner's Status
                     {partnerUser?.name && (
                       <span className="ml-1 text-xs text-green-600">✓</span>
                     )}
@@ -184,51 +184,7 @@ export default function Room() {
                   />
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <label className="text-sm text-muted-foreground">Your gender</label>
-                  <Select value={gender} onValueChange={(value: 'male' | 'female') => handleGenderChange(value)}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="male">Male</SelectItem>
-                      <SelectItem value="female">Female</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div>
-                  <label className="text-sm text-muted-foreground">Partner gender</label>
-                  <Input 
-                    value={partnerUser?.gender === 'male' ? 'Male' : partnerUser?.gender === 'female' ? 'Female' : 'Unknown'} 
-                    disabled 
-                    className={partnerUser?.gender ? "border-green-200 bg-green-50" : ""}
-                  />
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <label className="text-sm text-muted-foreground">Current environment</label>
-                  <Input 
-                    value={currentEnvironment === 'tea' ? 'Tea Room' : 'Village'} 
-                    disabled 
-                    className="border-blue-200 bg-blue-50"
-                  />
-                </div>
-                <div>
-                  <label className="text-sm text-muted-foreground">
-                    Partner environment
-                    {partnerUser?.currentEnvironment && partnerUser.currentEnvironment === currentEnvironment && (
-                      <span className="ml-1 text-xs text-green-600">✓</span>
-                    )}
-                  </label>
-                  <Input 
-                    value={partnerUser?.currentEnvironment === 'tea' ? 'Tea Room' : partnerUser?.currentEnvironment === 'village' ? 'Village' : 'Unknown'} 
-                    disabled 
-                    className={partnerUser?.currentEnvironment ? "border-green-200 bg-green-50" : ""}
-                  />
-                </div>
-              </div>
+             
               <Separator />
               <div className="flex gap-2">
                 <Input 
