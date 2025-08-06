@@ -19,13 +19,13 @@ const Index = () => {
     <div className="min-h-screen flex items-center justify-center bg-background">
       <div className="w-full max-w-md p-6 border rounded-xl bg-card shadow-sm space-y-4 animate-fade-in">
         <div className="text-center space-y-1">
-          <h1 className="text-3xl font-bold">Tea for Two</h1>
-          <p className="text-muted-foreground">Enter your details and join a private room</p>
+          <h1 className="text-3xl font-bold">Hangout</h1>
+          <p className="text-muted-foreground">Enter your details</p>
         </div>
         <div className="space-y-3">
           <div>
             <label className="text-sm text-muted-foreground">Your name</label>
-            <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Ayaan" />
+            <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Nabin" />
           </div>
           <div>
             <label className="text-sm text-muted-foreground">Gender</label>
