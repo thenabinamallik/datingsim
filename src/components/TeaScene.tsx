@@ -3,8 +3,6 @@ import { OrbitControls, Float, Html } from "@react-three/drei";
 import { Suspense, useMemo, useRef } from "react";
 import * as THREE from "three";
 
-/* ────────────────── Candle with flicker ────────────────── */
-
 function Candle({ position = [0, 0, 0] as [number, number, number] }) {
   const lightRef = useRef<THREE.PointLight>(null!);
 
@@ -196,100 +194,86 @@ function Avatar({
 
   return (
     <group position={position}>
-      {/* ── Body / Torso ── */}
-      <mesh castShadow>
-        <capsuleGeometry args={[0.085, 0.14, 8, 16]} />
-        <meshStandardMaterial color={bodyColor} />
-      </mesh>
-
-      {/* ── Arms ── */}
-      <mesh
-        castShadow
-        position={[-0.12, -0.02, 0]}
-        rotation={[0, 0, 0.35]}
-      >
-        <capsuleGeometry args={[0.022, 0.1, 4, 8]} />
-        <meshStandardMaterial color={bodyColor} />
-      </mesh>
-      <mesh
-        castShadow
-        position={[0.12, -0.02, 0]}
-        rotation={[0, 0, -0.35]}
-      >
-        <capsuleGeometry args={[0.022, 0.1, 4, 8]} />
-        <meshStandardMaterial color={bodyColor} />
-      </mesh>
-
-      {/* ── Hands ── */}
-      <mesh position={[-0.15, -0.09, 0]}>
-        <sphereGeometry args={[0.018, 8, 8]} />
-        <meshStandardMaterial color={skinColor} />
-      </mesh>
-      <mesh position={[0.15, -0.09, 0]}>
-        <sphereGeometry args={[0.018, 8, 8]} />
-        <meshStandardMaterial color={skinColor} />
-      </mesh>
-
-      {/* ── Head ── */}
-      <mesh castShadow position={[0, 0.18, 0]}>
-        <sphereGeometry args={[0.075, 16, 16]} />
-        <meshStandardMaterial color={skinColor} />
-      </mesh>
-
-      {/* ── Eyes ── */}
-      <mesh position={[-0.025, 0.19, 0.065]}>
-        <sphereGeometry args={[0.013, 8, 8]} />
-        <meshBasicMaterial color="#2c2c2c" />
-      </mesh>
-      <mesh position={[0.025, 0.19, 0.065]}>
-        <sphereGeometry args={[0.013, 8, 8]} />
-        <meshBasicMaterial color="#2c2c2c" />
-      </mesh>
-
-      {/* ── Blush cheeks ── */}
-      <mesh position={[-0.048, 0.17, 0.052]}>
-        <sphereGeometry args={[0.014, 8, 8]} />
-        <meshStandardMaterial color="#ffaaaa" transparent opacity={0.45} />
-      </mesh>
-      <mesh position={[0.048, 0.17, 0.052]}>
-        <sphereGeometry args={[0.014, 8, 8]} />
-        <meshStandardMaterial color="#ffaaaa" transparent opacity={0.45} />
-      </mesh>
-
-      {/* ── Hair ── */}
-      {isMale ? (
-        /* Short hair cap */
-        <mesh position={[0, 0.24, -0.008]}>
-          <sphereGeometry
-            args={[0.07, 16, 12, 0, Math.PI * 2, 0, Math.PI * 0.5]}
-          />
-          <meshStandardMaterial color={hairColor} />
+      <group position={[0, -0.05, 0]}>
+        {/* ── Body / Torso ── */}
+        <mesh castShadow>
+          <capsuleGeometry args={[0.07, 0.08, 8, 16]} />
+          <meshStandardMaterial color={bodyColor} />
         </mesh>
-      ) : (
-        /* Long hair with side strands + bow */
-        <>
-          <mesh position={[0, 0.25, -0.008]}>
-            <sphereGeometry
-              args={[0.074, 16, 12, 0, Math.PI * 2, 0, Math.PI * 0.55]}
-            />
+
+        {/* ── Arms ── */}
+        <mesh castShadow position={[-0.1, -0.01, 0]} rotation={[0, 0, -0.35]}>
+          <capsuleGeometry args={[0.025, 0.07, 4, 8]} />
+          <meshStandardMaterial color={bodyColor} />
+        </mesh>
+        <mesh castShadow position={[0.1, -0.01, 0]} rotation={[0, 0, 0.35]}>
+          <capsuleGeometry args={[0.025, 0.07, 4, 8]} />
+          <meshStandardMaterial color={bodyColor} />
+        </mesh>
+
+        {/* ── Hands ── */}
+        <mesh position={[-0.13, -0.07, 0]}>
+          <sphereGeometry args={[0.02, 8, 8]} />
+          <meshStandardMaterial color={skinColor} />
+        </mesh>
+        <mesh position={[0.13, -0.07, 0]}>
+          <sphereGeometry args={[0.02, 8, 8]} />
+          <meshStandardMaterial color={skinColor} />
+        </mesh>
+
+        {/* ── Head (Big Chibi Head) ── */}
+        <mesh castShadow position={[0, 0.16, 0]}>
+          <sphereGeometry args={[0.12, 16, 16]} />
+          <meshStandardMaterial color={skinColor} />
+        </mesh>
+
+        {/* ── Eyes ── */}
+        <mesh position={[-0.04, 0.17, 0.1]}>
+          <sphereGeometry args={[0.015, 8, 8]} />
+          <meshBasicMaterial color="#2c2c2c" />
+        </mesh>
+        <mesh position={[0.04, 0.17, 0.1]}>
+          <sphereGeometry args={[0.015, 8, 8]} />
+          <meshBasicMaterial color="#2c2c2c" />
+        </mesh>
+
+        {/* ── Blush cheeks ── */}
+        <mesh position={[-0.07, 0.14, 0.09]}>
+          <sphereGeometry args={[0.02, 8, 8]} />
+          <meshStandardMaterial color="#ffaaaa" transparent opacity={0.6} />
+        </mesh>
+        <mesh position={[0.07, 0.14, 0.09]}>
+          <sphereGeometry args={[0.02, 8, 8]} />
+          <meshStandardMaterial color="#ffaaaa" transparent opacity={0.6} />
+        </mesh>
+
+        {/* ── Hair ── */}
+        {isMale ? (
+          <mesh position={[0, 0.24, -0.01]}>
+            <sphereGeometry args={[0.11, 16, 12, 0, Math.PI * 2, 0, Math.PI * 0.5]} />
             <meshStandardMaterial color={hairColor} />
           </mesh>
-          {/* Side hair */}
-          <mesh position={[-0.055, 0.1, -0.018]}>
-            <capsuleGeometry args={[0.02, 0.1, 4, 8]} />
-            <meshStandardMaterial color={hairColor} />
-          </mesh>
-          <mesh position={[0.055, 0.1, -0.018]}>
-            <capsuleGeometry args={[0.02, 0.1, 4, 8]} />
-            <meshStandardMaterial color={hairColor} />
-          </mesh>
-          {/* Hair bow */}
-          <mesh position={[0.045, 0.27, 0.03]}>
-            <boxGeometry args={[0.04, 0.018, 0.01]} />
-            <meshStandardMaterial color="#ff6b9d" />
-          </mesh>
-        </>
-      )}
+        ) : (
+          <>
+            <mesh position={[0, 0.25, -0.01]}>
+              <sphereGeometry args={[0.115, 16, 12, 0, Math.PI * 2, 0, Math.PI * 0.55]} />
+              <meshStandardMaterial color={hairColor} />
+            </mesh>
+            <mesh position={[-0.09, 0.07, -0.03]}>
+              <capsuleGeometry args={[0.025, 0.12, 4, 8]} />
+              <meshStandardMaterial color={hairColor} />
+            </mesh>
+            <mesh position={[0.09, 0.07, -0.03]}>
+              <capsuleGeometry args={[0.025, 0.12, 4, 8]} />
+              <meshStandardMaterial color={hairColor} />
+            </mesh>
+            <mesh position={[0.07, 0.26, 0.04]}>
+              <boxGeometry args={[0.05, 0.02, 0.01]} />
+              <meshStandardMaterial color="#ff6b9d" />
+            </mesh>
+          </>
+        )}
+      </group>
 
       {/* ── Name label ── */}
       {name && (

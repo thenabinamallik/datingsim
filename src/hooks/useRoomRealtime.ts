@@ -293,16 +293,7 @@ export function useRoomRealtime(
     [roomId, selfId]
   );
 
-  const updateGender = useCallback(
-    async (newGender: "male" | "female") => {
-      if (!roomId || !selfId) return;
-      await update(ref(rtdb, `rooms/${roomId}/presence/${selfId}`), {
-        gender: newGender,
-        updatedAt: Date.now(),
-      }).catch(() => {});
-    },
-    [roomId, selfId]
-  );
+
 
   const updateEnvironment = useCallback(
     async (env: "tea" | "village") => {
@@ -324,7 +315,6 @@ export function useRoomRealtime(
     updatePosition,
     sendMessage,
     updateName,
-    updateGender,
     updateEnvironment,
   };
 }

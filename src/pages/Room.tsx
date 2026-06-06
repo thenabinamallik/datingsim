@@ -21,15 +21,24 @@ import {
 } from "@/components/ui/tooltip";
 import { useRoomRealtime } from "@/hooks/useRoomRealtime";
 import { toast } from "@/components/ui/use-toast";
+import usersData from "@/data/users.json";
 
 export default function Room() {
   const { roomId } = useParams();
   const [search] = useSearchParams();
   const navigate = useNavigate();
 
-  const initialName = search.get("name") ?? "";
-  const initialGender =
-    (search.get("gender") as "male" | "female") ?? "male";
+  const secretId = search.get("id");
+  const userData = secretId && secretId in usersData ? (usersData as any)[secretId] : null;
+
+  useEffect(() => {
+    if (!secretId || !userData) {
+      navigate("/");
+    }
+  }, [secretId, userData, navigate]);
+
+  const initialName = userData?.name ?? "";
+  const initialGender = (userData?.gender as "male" | "female") ?? "male";
 
   const [you, setYou] = useState(initialName);
   const [gender, setGender] = useState<"male" | "female">(initialGender);
@@ -53,7 +62,6 @@ export default function Room() {
     updatePosition,
     sendMessage,
     updateName,
-    updateGender,
     updateEnvironment,
   } = useRoomRealtime(roomId, you, gender);
 
@@ -128,10 +136,7 @@ export default function Room() {
     await updateName(newName);
   };
 
-  const handleGenderChange = async (newGender: "male" | "female") => {
-    setGender(newGender);
-    await updateGender(newGender);
-  };
+
 
   const handleEnvironmentChange = async (
     environment: "tea" | "village"
@@ -143,17 +148,7 @@ export default function Room() {
     setTimeout(() => setIsChangingEnvironment(false), 1000);
   };
 
-  const copyRoomLink = async () => {
-    const url = `${window.location.origin}/room/${roomId}`;
-    try {
-      await navigator.clipboard.writeText(url);
-      setLinkCopied(true);
-      toast({ description: "Room link copied!" });
-      setTimeout(() => setLinkCopied(false), 2000);
-    } catch {
-      toast({ description: "Could not copy link." });
-    }
-  };
+
 
   const connectedUsers = Object.keys(users).length;
 
@@ -243,22 +238,6 @@ export default function Room() {
             </div>
 
             <div className="flex items-center gap-2">
-              <code className="text-xs bg-muted/40 px-2.5 py-1.5 rounded-lg flex-1 truncate text-muted-foreground">
-                {roomId}
-              </code>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={copyRoomLink}
-                    className="text-xs h-8 px-2.5 hover:bg-white/5"
-                  >
-                    {linkCopied ? "✓ Copied" : "📋 Copy"}
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>Copy room link to share</TooltipContent>
-              </Tooltip>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
@@ -267,51 +246,16 @@ export default function Room() {
                     onClick={() => navigate("/")}
                     className="text-xs h-8 px-2.5 hover:bg-destructive/10 hover:text-destructive"
                   >
-                    ✕
+                    ✕ Leave
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent>Leave room</TooltipContent>
+                <TooltipContent>Leave sanctuary</TooltipContent>
               </Tooltip>
             </div>
           </div>
 
           {/* ── User Profiles (compact) ── */}
           <div className="p-4 border-b border-border/30 space-y-3">
-            {/* You */}
-            <div className="flex items-center gap-3">
-              <div
-                className={`w-10 h-10 rounded-full flex items-center justify-center text-base font-bold shrink-0 transition-colors ${
-                  gender === "male"
-                    ? "bg-blue-500/15 text-blue-400 ring-1 ring-blue-500/20"
-                    : "bg-pink-500/15 text-pink-400 ring-1 ring-pink-500/20"
-                }`}
-              >
-                {gender === "male" ? "♂" : "♀"}
-              </div>
-              <div className="flex-1 min-w-0">
-                <label className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-medium">
-                  You
-                </label>
-                <Input
-                  id="your-name"
-                  value={you}
-                  onChange={(e) => handleNameChange(e.target.value)}
-                  placeholder="Your name"
-                  className="h-7 text-sm bg-transparent border-transparent hover:border-border/50 focus:border-primary/50 px-1.5 py-0 -mt-0.5"
-                />
-              </div>
-              <Select value={gender} onValueChange={handleGenderChange}>
-                <SelectTrigger className="w-[70px] h-7 text-xs bg-transparent border-transparent hover:border-border/50">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="male">Male</SelectItem>
-                  <SelectItem value="female">Female</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Partner */}
             <div className="flex items-center gap-3">
               <div
                 className={`w-10 h-10 rounded-full flex items-center justify-center text-base font-bold shrink-0 transition-colors ${
@@ -324,8 +268,8 @@ export default function Room() {
               >
                 {partnerUser
                   ? partnerUser.gender === "male"
-                    ? "♂"
-                    : "♀"
+                    ? "G"
+                    : "V"
                   : "?"}
               </div>
               <div className="flex-1 min-w-0">

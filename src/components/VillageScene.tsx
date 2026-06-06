@@ -105,42 +105,42 @@ function CharacterBody({
   const skinColor = "#f0c8a0";
 
   return (
-    <group>
+    <group position={[0, -0.05, 0]}>
       {/* ── Legs ── */}
       {isMale ? (
         <>
-          <mesh castShadow position={[-0.065, -0.28, 0]}>
-            <capsuleGeometry args={[0.05, 0.14, 4, 8]} />
+          <mesh castShadow position={[-0.05, -0.12, 0]}>
+            <capsuleGeometry args={[0.045, 0.08, 4, 8]} />
             <meshStandardMaterial color="#5a4a3a" />
           </mesh>
-          <mesh castShadow position={[0.065, -0.28, 0]}>
-            <capsuleGeometry args={[0.05, 0.14, 4, 8]} />
+          <mesh castShadow position={[0.05, -0.12, 0]}>
+            <capsuleGeometry args={[0.045, 0.08, 4, 8]} />
             <meshStandardMaterial color="#5a4a3a" />
           </mesh>
           {/* Shoes */}
-          <mesh position={[-0.065, -0.4, 0.02]}>
-            <boxGeometry args={[0.07, 0.04, 0.1]} />
+          <mesh position={[-0.05, -0.2, 0.02]}>
+            <boxGeometry args={[0.06, 0.03, 0.08]} />
             <meshStandardMaterial color="#333" />
           </mesh>
-          <mesh position={[0.065, -0.4, 0.02]}>
-            <boxGeometry args={[0.07, 0.04, 0.1]} />
+          <mesh position={[0.05, -0.2, 0.02]}>
+            <boxGeometry args={[0.06, 0.03, 0.08]} />
             <meshStandardMaterial color="#333" />
           </mesh>
         </>
       ) : (
         <>
           {/* Skirt / Dress bottom */}
-          <mesh castShadow position={[0, -0.2, 0]}>
-            <cylinderGeometry args={[0.1, 0.17, 0.22, 12]} />
+          <mesh castShadow position={[0, -0.1, 0]}>
+            <cylinderGeometry args={[0.09, 0.14, 0.15, 12]} />
             <meshStandardMaterial color={bodyColor} />
           </mesh>
           {/* Feet */}
-          <mesh position={[-0.05, -0.38, 0.02]}>
-            <boxGeometry args={[0.055, 0.035, 0.08]} />
+          <mesh position={[-0.04, -0.18, 0.02]}>
+            <boxGeometry args={[0.05, 0.03, 0.07]} />
             <meshStandardMaterial color="#e06088" />
           </mesh>
-          <mesh position={[0.05, -0.38, 0.02]}>
-            <boxGeometry args={[0.055, 0.035, 0.08]} />
+          <mesh position={[0.04, -0.18, 0.02]}>
+            <boxGeometry args={[0.05, 0.03, 0.07]} />
             <meshStandardMaterial color="#e06088" />
           </mesh>
         </>
@@ -148,92 +148,78 @@ function CharacterBody({
 
       {/* ── Body / Torso ── */}
       <mesh castShadow>
-        <capsuleGeometry args={[0.12, 0.18, 8, 16]} />
+        <capsuleGeometry args={[0.1, 0.1, 8, 16]} />
         <meshStandardMaterial color={bodyColor} />
       </mesh>
 
       {/* ── Arms ── */}
-      <mesh
-        castShadow
-        position={[-0.17, -0.04, 0]}
-        rotation={[0, 0, 0.3]}
-      >
-        <capsuleGeometry args={[0.035, 0.16, 4, 8]} />
+      <mesh castShadow position={[-0.14, -0.02, 0]} rotation={[0, 0, -0.35]}>
+        <capsuleGeometry args={[0.035, 0.1, 4, 8]} />
         <meshStandardMaterial color={bodyColor} />
       </mesh>
-      <mesh
-        castShadow
-        position={[0.17, -0.04, 0]}
-        rotation={[0, 0, -0.3]}
-      >
-        <capsuleGeometry args={[0.035, 0.16, 4, 8]} />
+      <mesh castShadow position={[0.14, -0.02, 0]} rotation={[0, 0, 0.35]}>
+        <capsuleGeometry args={[0.035, 0.1, 4, 8]} />
         <meshStandardMaterial color={bodyColor} />
       </mesh>
 
       {/* ── Hands ── */}
-      <mesh position={[-0.21, -0.15, 0]}>
-        <sphereGeometry args={[0.028, 8, 8]} />
+      <mesh position={[-0.18, -0.1, 0]}>
+        <sphereGeometry args={[0.03, 8, 8]} />
         <meshStandardMaterial color={skinColor} />
       </mesh>
-      <mesh position={[0.21, -0.15, 0]}>
-        <sphereGeometry args={[0.028, 8, 8]} />
+      <mesh position={[0.18, -0.1, 0]}>
+        <sphereGeometry args={[0.03, 8, 8]} />
         <meshStandardMaterial color={skinColor} />
       </mesh>
 
-      {/* ── Head ── */}
+      {/* ── Head (Big Chibi Head) ── */}
       <mesh castShadow position={[0, 0.22, 0]}>
-        <sphereGeometry args={[0.1, 16, 16]} />
+        <sphereGeometry args={[0.16, 16, 16]} />
         <meshStandardMaterial color={skinColor} />
       </mesh>
 
       {/* ── Eyes ── */}
-      <mesh position={[-0.033, 0.23, 0.088]}>
-        <sphereGeometry args={[0.016, 8, 8]} />
+      <mesh position={[-0.05, 0.23, 0.14]}>
+        <sphereGeometry args={[0.02, 8, 8]} />
         <meshBasicMaterial color="#2c2c2c" />
       </mesh>
-      <mesh position={[0.033, 0.23, 0.088]}>
-        <sphereGeometry args={[0.016, 8, 8]} />
+      <mesh position={[0.05, 0.23, 0.14]}>
+        <sphereGeometry args={[0.02, 8, 8]} />
         <meshBasicMaterial color="#2c2c2c" />
       </mesh>
 
       {/* ── Blush cheeks ── */}
-      <mesh position={[-0.06, 0.205, 0.07]}>
-        <sphereGeometry args={[0.018, 8, 8]} />
-        <meshStandardMaterial color="#ffaaaa" transparent opacity={0.45} />
+      <mesh position={[-0.09, 0.19, 0.12]}>
+        <sphereGeometry args={[0.025, 8, 8]} />
+        <meshStandardMaterial color="#ffaaaa" transparent opacity={0.6} />
       </mesh>
-      <mesh position={[0.06, 0.205, 0.07]}>
-        <sphereGeometry args={[0.018, 8, 8]} />
-        <meshStandardMaterial color="#ffaaaa" transparent opacity={0.45} />
+      <mesh position={[0.09, 0.19, 0.12]}>
+        <sphereGeometry args={[0.025, 8, 8]} />
+        <meshStandardMaterial color="#ffaaaa" transparent opacity={0.6} />
       </mesh>
 
       {/* ── Hair ── */}
       {isMale ? (
-        <mesh position={[0, 0.29, -0.01]}>
-          <sphereGeometry
-            args={[0.093, 16, 12, 0, Math.PI * 2, 0, Math.PI * 0.5]}
-          />
+        <mesh position={[0, 0.33, -0.02]}>
+          <sphereGeometry args={[0.15, 16, 12, 0, Math.PI * 2, 0, Math.PI * 0.5]} />
           <meshStandardMaterial color={hairColor} />
         </mesh>
       ) : (
         <>
-          <mesh position={[0, 0.3, -0.01]}>
-            <sphereGeometry
-              args={[0.098, 16, 12, 0, Math.PI * 2, 0, Math.PI * 0.55]}
-            />
+          <mesh position={[0, 0.34, -0.02]}>
+            <sphereGeometry args={[0.155, 16, 12, 0, Math.PI * 2, 0, Math.PI * 0.55]} />
             <meshStandardMaterial color={hairColor} />
           </mesh>
-          {/* Side hair flowing down */}
-          <mesh position={[-0.075, 0.12, -0.025]}>
-            <capsuleGeometry args={[0.025, 0.14, 4, 8]} />
+          <mesh position={[-0.12, 0.1, -0.04]}>
+            <capsuleGeometry args={[0.035, 0.16, 4, 8]} />
             <meshStandardMaterial color={hairColor} />
           </mesh>
-          <mesh position={[0.075, 0.12, -0.025]}>
-            <capsuleGeometry args={[0.025, 0.14, 4, 8]} />
+          <mesh position={[0.12, 0.1, -0.04]}>
+            <capsuleGeometry args={[0.035, 0.16, 4, 8]} />
             <meshStandardMaterial color={hairColor} />
           </mesh>
-          {/* Hair bow */}
-          <mesh position={[0.06, 0.32, 0.04]}>
-            <boxGeometry args={[0.05, 0.022, 0.012]} />
+          <mesh position={[0.09, 0.36, 0.06]}>
+            <boxGeometry args={[0.07, 0.03, 0.015]} />
             <meshStandardMaterial color="#ff6b9d" />
           </mesh>
         </>
@@ -260,9 +246,40 @@ function Player({
   const dir = useRef(new THREE.Vector3());
   const speed = 1.8;
   const bounds = 50;
-  const { camera } = useThree();
+  const { camera, gl } = useThree();
   const move = useMovement();
   const lastSent = useRef(0);
+  const angleOffset = useRef(0);
+
+  useEffect(() => {
+    let isDragging = false;
+    let previousX = 0;
+
+    const onPointerDown = (e: PointerEvent) => {
+      isDragging = true;
+      previousX = e.clientX;
+    };
+    const onPointerMove = (e: PointerEvent) => {
+      if (!isDragging) return;
+      const deltaX = e.clientX - previousX;
+      angleOffset.current -= deltaX * 0.01;
+      previousX = e.clientX;
+    };
+    const onPointerUp = () => {
+      isDragging = false;
+    };
+
+    const canvas = gl.domElement;
+    canvas.addEventListener("pointerdown", onPointerDown);
+    window.addEventListener("pointermove", onPointerMove);
+    window.addEventListener("pointerup", onPointerUp);
+
+    return () => {
+      canvas.removeEventListener("pointerdown", onPointerDown);
+      window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("pointerup", onPointerUp);
+    };
+  }, [gl]);
 
   useFrame((state, delta) => {
     dir.current.set(0, 0, 0);
@@ -293,12 +310,18 @@ function Player({
     if (vel.current.lengthSq() > 1e-6) {
       const angle = Math.atan2(vel.current.x, vel.current.z);
       ref.current.rotation.y = angle;
+      // Re-center camera angle offset when character moves
+      angleOffset.current = THREE.MathUtils.lerp(angleOffset.current, 0, 0.1);
     }
 
+    const defaultRadius = Math.sqrt(2.2 * 2.2 + 2.6 * 2.6);
+    const defaultTheta = Math.atan2(2.6, -2.2);
+    const currentTheta = defaultTheta + angleOffset.current;
+
     const desired = new THREE.Vector3(
-      ref.current.position.x - 2.2,
+      ref.current.position.x + Math.cos(currentTheta) * defaultRadius,
       1.6,
-      ref.current.position.z + 2.6
+      ref.current.position.z + Math.sin(currentTheta) * defaultRadius
     );
     camera.position.lerp(desired, 0.1);
     camera.lookAt(
@@ -394,10 +417,52 @@ function House({
   );
 }
 
+/* ────────────────── Rocks ────────────────── */
+
+function Rock({
+  position = [0, 0, 0] as [number, number, number],
+}) {
+  return (
+    <group position={position}>
+      <mesh castShadow position={[0, 0.15, 0]}>
+        <dodecahedronGeometry args={[0.3, 0]} />
+        <meshStandardMaterial color="#7f8c8d" />
+      </mesh>
+    </group>
+  );
+}
+
+/* ────────────────── Bushes ────────────────── */
+
+function Bush({
+  position = [0, 0, 0] as [number, number, number],
+}) {
+  return (
+    <group position={position}>
+      <mesh castShadow position={[0, 0.3, 0]}>
+        <sphereGeometry args={[0.4, 8, 8]} />
+        <meshStandardMaterial color="#2e7d32" />
+      </mesh>
+      <mesh castShadow position={[0.2, 0.2, 0.1]}>
+        <sphereGeometry args={[0.25, 8, 8]} />
+        <meshStandardMaterial color="#2e7d32" />
+      </mesh>
+      <mesh castShadow position={[-0.2, 0.2, -0.1]}>
+        <sphereGeometry args={[0.25, 8, 8]} />
+        <meshStandardMaterial color="#2e7d32" />
+      </mesh>
+    </group>
+  );
+}
+
 /* ────────────────── Notes ────────────────── */
 
 function Note({
   position = [0, 0, 0] as [number, number, number],
+  messageIndex = 0,
+}: {
+  position?: [number, number, number];
+  messageIndex?: number;
 }) {
   const messages = [
     "You're doing great!",
@@ -413,9 +478,8 @@ function Note({
   ];
 
   const randomMessage = useMemo(
-    () => messages[Math.floor(Math.random() * messages.length)],
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    () => messages[messageIndex % messages.length],
+    [messageIndex]
   );
 
   return (
@@ -455,6 +519,12 @@ function Note({
 
 /* ────────────────── Village World ────────────────── */
 
+// Deterministic random number generator
+const seededRandom = (seed: number) => {
+  const x = Math.sin(seed) * 10000;
+  return x - Math.floor(x);
+};
+
 function VillageWorld({
   playerPosition = [0, 0, 0] as [number, number, number],
 }) {
@@ -465,53 +535,52 @@ function VillageWorld({
   );
   const mapSize = Math.ceil(rawMapSize / 20) * 20;
 
-  const trees = useMemo(
-    () => {
-      const treeCount = Math.floor(mapSize / 2);
-      return Array.from(
-        { length: treeCount },
-        () =>
-          [
-            (Math.random() - 0.5) * mapSize,
-            0,
-            (Math.random() - 0.5) * mapSize,
-          ] as [number, number, number]
-      );
-    },
-    [mapSize]
-  );
+  const fixedObjectArea = 160;
 
-  const houses = useMemo(
-    () => {
-      const houseCount = Math.floor(mapSize / 20);
-      return Array.from(
-        { length: houseCount },
-        () =>
-          [
-            (Math.random() - 0.5) * mapSize,
-            0,
-            (Math.random() - 0.5) * mapSize,
-          ] as [number, number, number]
-      );
-    },
-    [mapSize]
-  );
+  const trees = useMemo(() => {
+    const treeCount = 80;
+    return Array.from({ length: treeCount }, (_, i) => [
+      (seededRandom(i * 10 + 1) - 0.5) * fixedObjectArea,
+      0,
+      (seededRandom(i * 10 + 2) - 0.5) * fixedObjectArea,
+    ] as [number, number, number]);
+  }, []);
 
-  const notes = useMemo(
-    () => {
-      const noteCount = Math.floor(mapSize / 15);
-      return Array.from(
-        { length: noteCount },
-        () =>
-          [
-            (Math.random() - 0.5) * mapSize,
-            0.5,
-            (Math.random() - 0.5) * mapSize,
-          ] as [number, number, number]
-      );
-    },
-    [mapSize]
-  );
+  const houses = useMemo(() => {
+    const houseCount = 12;
+    return Array.from({ length: houseCount }, (_, i) => [
+      (seededRandom(i * 10 + 3) - 0.5) * fixedObjectArea,
+      0,
+      (seededRandom(i * 10 + 4) - 0.5) * fixedObjectArea,
+    ] as [number, number, number]);
+  }, []);
+
+  const notes = useMemo(() => {
+    const noteCount = 10;
+    return Array.from({ length: noteCount }, (_, i) => [
+      (seededRandom(i * 10 + 5) - 0.5) * fixedObjectArea,
+      0.5,
+      (seededRandom(i * 10 + 6) - 0.5) * fixedObjectArea,
+    ] as [number, number, number]);
+  }, []);
+
+  const rocks = useMemo(() => {
+    const rockCount = 30;
+    return Array.from({ length: rockCount }, (_, i) => [
+      (seededRandom(i * 10 + 7) - 0.5) * fixedObjectArea,
+      0,
+      (seededRandom(i * 10 + 8) - 0.5) * fixedObjectArea,
+    ] as [number, number, number]);
+  }, []);
+
+  const bushes = useMemo(() => {
+    const bushCount = 40;
+    return Array.from({ length: bushCount }, (_, i) => [
+      (seededRandom(i * 10 + 9) - 0.5) * fixedObjectArea,
+      0,
+      (seededRandom(i * 10 + 10) - 0.5) * fixedObjectArea,
+    ] as [number, number, number]);
+  }, []);
 
   return (
     <group>
@@ -546,7 +615,13 @@ function VillageWorld({
         <Tree key={i} position={p} />
       ))}
       {notes.map((p, i) => (
-        <Note key={i} position={p} />
+        <Note key={i} position={p} messageIndex={i} />
+      ))}
+      {rocks.map((p, i) => (
+        <Rock key={i} position={p} />
+      ))}
+      {bushes.map((p, i) => (
+        <Bush key={i} position={p} />
       ))}
     </group>
   );
