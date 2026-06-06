@@ -95,11 +95,13 @@ export default function Room() {
       !isChangingEnvironment
     ) {
       setCurrentEnvironment(partnerUser.currentEnvironment);
+      updateEnvironment(partnerUser.currentEnvironment);
     }
   }, [
     partnerUser?.currentEnvironment,
     currentEnvironment,
     isChangingEnvironment,
+    updateEnvironment,
   ]);
 
   useEffect(() => {

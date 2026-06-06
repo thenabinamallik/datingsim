@@ -104,6 +104,12 @@ export function useRoomRealtime(
 
         if (cancelled) return;
 
+        let initialEnv = "village";
+        if (others.length > 0) {
+          const partnerId = others[0];
+          initialEnv = data[partnerId].currentEnvironment || "village";
+        }
+
         await set(presenceRef, {
           name: nameRef.current,
           gender: genderRef.current,
@@ -112,7 +118,7 @@ export function useRoomRealtime(
           z: 0,
           ry: 0,
           updatedAt: Date.now(),
-          currentEnvironment: "village",
+          currentEnvironment: initialEnv,
         });
 
         // Firebase will auto-remove this data on disconnect (tab close, network loss, etc.)
