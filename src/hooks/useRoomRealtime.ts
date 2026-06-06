@@ -30,7 +30,7 @@ export type RoomUser = {
   z: number;
   ry: number;
   updatedAt: number;
-  currentEnvironment?: "tea" | "village";
+  currentEnvironment?: "tea" | "village" | "memories";
 };
 
 export type RoomMessage = {
@@ -296,7 +296,7 @@ export function useRoomRealtime(
 
 
   const updateEnvironment = useCallback(
-    async (env: "tea" | "village") => {
+    async (env: "tea" | "village" | "memories") => {
       if (!roomId || !selfId) return;
       await update(ref(rtdb, `rooms/${roomId}/presence/${selfId}`), {
         currentEnvironment: env,

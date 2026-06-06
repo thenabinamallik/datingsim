@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 import TeaScene from "@/components/TeaScene";
 import VillageScene from "@/components/VillageScene";
+import MemoriesScene from "@/components/MemoriesScene";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -44,7 +45,7 @@ export default function Room() {
   const [gender, setGender] = useState<"male" | "female">(initialGender);
   const [message, setMessage] = useState("");
   const [currentEnvironment, setCurrentEnvironment] = useState<
-    "tea" | "village"
+    "tea" | "village" | "memories"
   >("village");
   const [isChangingEnvironment, setIsChangingEnvironment] = useState(false);
   const [linkCopied, setLinkCopied] = useState(false);
@@ -139,7 +140,7 @@ export default function Room() {
 
 
   const handleEnvironmentChange = async (
-    environment: "tea" | "village"
+    environment: "tea" | "village" | "memories"
   ) => {
     if (isChangingEnvironment) return;
     setIsChangingEnvironment(true);
@@ -160,7 +161,7 @@ export default function Room() {
           <Tabs
             value={currentEnvironment}
             onValueChange={(v) =>
-              handleEnvironmentChange(v as "tea" | "village")
+              handleEnvironmentChange(v as "tea" | "village" | "memories")
             }
             className="w-full h-full flex flex-col"
           >
@@ -169,6 +170,7 @@ export default function Room() {
               <TabsList className="glass-card border-0 shadow-lg">
                 <TabsTrigger value="village">🏡 Village</TabsTrigger>
                 <TabsTrigger value="tea">🍵 Tea Room</TabsTrigger>
+                <TabsTrigger value="memories">🎬 Memories</TabsTrigger>
               </TabsList>
             </div>
 
@@ -188,6 +190,30 @@ export default function Room() {
             <TabsContent value="village" className="flex-1 m-0 data-[state=inactive]:hidden">
               <div className="h-full">
                 <VillageScene
+                  onSelfMove={updatePosition}
+                  partner={
+                    partnerUser
+                      ? {
+                          x: partnerUser.x,
+                          y: partnerUser.y,
+                          z: partnerUser.z,
+                          ry: partnerUser.ry,
+                          name: partnerUser.name,
+                          gender: partnerUser.gender,
+                          lastMessage: partnerLatestMsg,
+                        }
+                      : undefined
+                  }
+                  youGender={gender}
+                  youName={you}
+                  youMessage={youLatestMsg}
+                />
+              </div>
+            </TabsContent>
+
+            <TabsContent value="memories" className="flex-1 m-0 data-[state=inactive]:hidden">
+              <div className="h-full">
+                <MemoriesScene
                   onSelfMove={updatePosition}
                   partner={
                     partnerUser
