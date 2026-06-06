@@ -24,6 +24,17 @@ import { useRoomRealtime } from "@/hooks/useRoomRealtime";
 import { toast } from "@/components/ui/use-toast";
 import usersData from "@/data/users.json";
 
+const QUICK_MESSAGES = [
+  "Hey there! 👋",
+  "You look amazing! ✨",
+  "I love this place! ❤️",
+  "Let's explore! 🏡",
+  "Shall we have tea? 🍵",
+  "Look at this picture! 🌸",
+  "So happy to be here with you! 🥰",
+  "You make my heart skip a beat! 💓",
+];
+
 export default function Room() {
   const { roomId } = useParams();
   const [search] = useSearchParams();
@@ -60,6 +71,7 @@ export default function Room() {
     messages,
     users,
     isConnected,
+    ping,
     updatePosition,
     sendMessage,
     updateName,
@@ -241,25 +253,32 @@ export default function Room() {
         <div className="flex flex-col h-screen overflow-hidden bg-card/50">
           {/* ── Room Header ── */}
           <div className="p-4 border-b border-border/30">
-            <div className="flex items-center justify-between mb-2.5">
+             <div className="flex items-center justify-between mb-2.5">
               <h2 className="font-display font-bold text-lg gradient-text">
                 Hangout
               </h2>
-              <div className="flex items-center gap-2">
-                <div
-                  className={`w-2 h-2 rounded-full shrink-0 ${
-                    isConnected
-                      ? "bg-emerald-400 animate-pulse-dot"
-                      : "bg-zinc-500"
-                  }`}
-                />
-                <span className="text-xs text-muted-foreground">
-                  {isConnected
-                    ? connectedUsers === 2
-                      ? "Both connected"
-                      : "Waiting for partner…"
-                    : "Connecting…"}
-                </span>
+              <div className="flex items-center gap-2.5">
+                {ping !== null && isConnected && (
+                  <span className="text-[10px] text-emerald-400 font-mono bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20 shadow-sm transition-all duration-300">
+                    ⚡ {ping}ms
+                  </span>
+                )}
+                <div className="flex items-center gap-2">
+                  <div
+                    className={`w-2 h-2 rounded-full shrink-0 ${
+                      isConnected
+                        ? "bg-emerald-400 animate-pulse-dot"
+                        : "bg-zinc-500"
+                    }`}
+                  />
+                  <span className="text-xs text-muted-foreground">
+                    {isConnected
+                      ? connectedUsers === 2
+                        ? "Both connected"
+                        : "Waiting for partner…"
+                      : "Connecting…"}
+                  </span>
+                </div>
               </div>
             </div>
 
@@ -378,7 +397,29 @@ export default function Room() {
             </div>
 
             {/* Message input */}
-            <div className="p-3 border-t border-border/30">
+            <div className="p-3 border-t border-border/30 space-y-3">
+              {/* Quick Messages */}
+              <div className="space-y-1.5">
+                <span className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-semibold px-1">
+                  Quick Messages
+                </span>
+                <div 
+                  className="flex gap-2 overflow-x-auto pb-1.5 pt-0.5 px-1 scroll-smooth"
+                  style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+                >
+                  {QUICK_MESSAGES.map((msg, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => sendMessage(msg)}
+                      disabled={!isConnected}
+                      className="px-3 py-1.5 text-xs rounded-full bg-primary/10 hover:bg-primary/20 text-foreground border border-primary/20 hover:border-primary/45 transition-all duration-200 whitespace-nowrap shrink-0 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 flex items-center gap-1 shadow-sm font-medium hover:-translate-y-0.5"
+                    >
+                      {msg}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               <div className="flex gap-2">
                 <Input
                   id="message-input"

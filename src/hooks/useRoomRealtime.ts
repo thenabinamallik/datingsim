@@ -57,6 +57,7 @@ export function useRoomRealtime(
   const [users, setUsers] = useState<Record<string, RoomUser>>({});
   const [messages, setMessages] = useState<RoomMessage[]>([]);
   const [isConnected, setIsConnected] = useState(false);
+  const [ping, setPing] = useState<number | null>(null);
 
   // Refs so the join-room effect can read current values without re-running
   const nameRef = useRef(name);
@@ -146,6 +147,31 @@ export function useRoomRealtime(
     };
   }, [roomId, selfId]);
 
+  /* ──────── 2.5. Ping measurement (RTDB latency) ──────── */
+
+  useEffect(() => {
+    if (!isConnected || !roomId || !selfId) return;
+
+    const pingRef = ref(rtdb, `rooms/${roomId}/ping/${selfId}`);
+    onDisconnect(pingRef).remove().catch(() => {});
+
+    const interval = setInterval(async () => {
+      const start = performance.now();
+      try {
+        await set(pingRef, Date.now());
+        const latency = Math.round(performance.now() - start);
+        setPing(latency);
+      } catch {
+        // ignore
+      }
+    }, 4000);
+
+    return () => {
+      clearInterval(interval);
+      remove(pingRef).catch(() => {});
+    };
+  }, [isConnected, roomId, selfId]);
+
   /* ──────── 3. Sync profile changes without re-joining ──────── */
 
   useEffect(() => {
@@ -199,32 +225,32 @@ export function useRoomRealtime(
     return () => unsub();
   }, [roomId]);
 
-  /* ──────── 5. Subscribe to messages (Firestore) ──────── */
+  /* ──────── 5. Subscribe to messages (RTDB for ultra-low latency) ──────── */
 
   useEffect(() => {
     if (!roomId) return;
 
-    const q = query(
-      collection(firestore, "rooms", roomId, "messages"),
-      orderBy("timestamp", "desc"),
-      limit(50)
-    );
-
-    const unsub = onSnapshot(
-      q,
+    const messagesRef = ref(rtdb, `rooms/${roomId}/messages`);
+    const unsub = onValue(
+      messagesRef,
       (snap) => {
-        const msgs: RoomMessage[] = [];
-        snap.forEach((d) => {
-          const v = d.data();
-          msgs.push({
-            id: d.id,
-            from: (v.from as string) || "",
-            fromId: (v.fromId as string) || "",
-            text: (v.text as string) || "",
-            timestamp: (v.timestamp as number) || 0,
-          });
-        });
-        setMessages(msgs.reverse());
+        const data = snap.val();
+        if (!data) {
+          setMessages([]);
+          return;
+        }
+
+        const msgs: RoomMessage[] = Object.entries(data).map(([id, v]: [string, any]) => ({
+          id,
+          from: v.from || "",
+          fromId: v.fromId || "",
+          text: v.text || "",
+          timestamp: v.timestamp || 0,
+        }));
+        
+        // Sort by timestamp ascending
+        msgs.sort((a, b) => a.timestamp - b.timestamp);
+        setMessages(msgs);
       },
       (error) => {
         console.error("Messages subscription error:", error);
@@ -268,14 +294,16 @@ export function useRoomRealtime(
       }
 
       try {
-        await addDoc(collection(firestore, "rooms", roomId, "messages"), {
+        const msgId = `${Date.now()}_${Math.random().toString(36).slice(2, 6)}`;
+        const msgRef = ref(rtdb, `rooms/${roomId}/messages/${msgId}`);
+        await set(msgRef, {
           from: currentUser.name,
           fromId: selfId,
           text: text.trim(),
           timestamp: Date.now(),
-          ts: serverTimestamp(),
         });
-      } catch {
+      } catch (e) {
+        console.error("Failed to send message:", e);
         toast({ description: "Failed to send message." });
       }
     },
@@ -312,6 +340,7 @@ export function useRoomRealtime(
     partner,
     messages,
     isConnected,
+    ping,
     updatePosition,
     sendMessage,
     updateName,
