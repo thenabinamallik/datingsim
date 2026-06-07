@@ -23,17 +23,8 @@ import {
 import { useRoomRealtime } from "@/hooks/useRoomRealtime";
 import { toast } from "@/components/ui/use-toast";
 import usersData from "@/data/users.json";
+import SpotifyPlayer from "@/components/SpotifyPlayer";
 
-const QUICK_MESSAGES = [
-  "Hey there! 👋",
-  "You look amazing! ✨",
-  "I love this place! ❤️",
-  "Let's explore! 🏡",
-  "Shall we have tea? 🍵",
-  "Look at this picture! 🌸",
-  "So happy to be here with you! 🥰",
-  "You make my heart skip a beat! 💓",
-];
 
 export default function Room() {
   const { roomId } = useParams();
@@ -76,6 +67,8 @@ export default function Room() {
     sendMessage,
     updateName,
     updateEnvironment,
+    updatePlayer,
+    playerState,
   } = useRoomRealtime(roomId, you, gender);
 
   /* ── Auto-scroll chat ── */
@@ -398,28 +391,6 @@ export default function Room() {
 
             {/* Message input */}
             <div className="p-3 border-t border-border/30 space-y-3">
-              {/* Quick Messages */}
-              <div className="space-y-1.5">
-                <span className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-semibold px-1">
-                  Quick Messages
-                </span>
-                <div 
-                  className="flex gap-2 overflow-x-auto pb-1.5 pt-0.5 px-1 scroll-smooth"
-                  style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-                >
-                  {QUICK_MESSAGES.map((msg, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => sendMessage(msg)}
-                      disabled={!isConnected}
-                      className="px-3 py-1.5 text-xs rounded-full bg-primary/10 hover:bg-primary/20 text-foreground border border-primary/20 hover:border-primary/45 transition-all duration-200 whitespace-nowrap shrink-0 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 flex items-center gap-1 shadow-sm font-medium hover:-translate-y-0.5"
-                    >
-                      {msg}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
               <div className="flex gap-2">
                 <Input
                   id="message-input"
@@ -453,6 +424,13 @@ export default function Room() {
                   </svg>
                 </Button>
               </div>
+              
+              {/* Spotify Player */}
+              <SpotifyPlayer 
+                playerState={playerState} 
+                updatePlayer={updatePlayer} 
+                selfId={selfId} 
+              />
             </div>
           </div>
         </div>

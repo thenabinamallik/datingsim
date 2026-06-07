@@ -250,6 +250,7 @@ function Player({
   const move = useMovement();
   const lastSent = useRef(0);
   const angleOffset = useRef(0);
+  const cameraAngle = useRef(Math.PI); // behind character (facing +Z by default)
 
   useEffect(() => {
     let isDragging = false;
@@ -262,7 +263,7 @@ function Player({
     const onPointerMove = (e: PointerEvent) => {
       if (!isDragging) return;
       const deltaX = e.clientX - previousX;
-      angleOffset.current -= deltaX * 0.01;
+      angleOffset.current -= deltaX * 0.005;
       previousX = e.clientX;
     };
     const onPointerUp = () => {
@@ -282,11 +283,18 @@ function Player({
   }, [gl]);
 
   useFrame((state, delta) => {
+    /* ── Movement relative to camera facing direction ── */
+    const camForward = new THREE.Vector3();
+    camera.getWorldDirection(camForward);
+    camForward.y = 0;
+    camForward.normalize();
+    const camRight = new THREE.Vector3().crossVectors(camForward, new THREE.Vector3(0, 1, 0)).normalize();
+
     dir.current.set(0, 0, 0);
-    if (move.forward) dir.current.z -= 1;
-    if (move.back) dir.current.z += 1;
-    if (move.left) dir.current.x -= 1;
-    if (move.right) dir.current.x += 1;
+    if (move.forward) dir.current.add(camForward);
+    if (move.back) dir.current.sub(camForward);
+    if (move.left) dir.current.sub(camRight);
+    if (move.right) dir.current.add(camRight);
 
     if (dir.current.lengthSq() > 0) {
       dir.current.normalize().multiplyScalar(speed * delta);
@@ -307,28 +315,38 @@ function Player({
       bounds
     );
 
+    /* ── Face the character in the direction of movement ── */
     if (vel.current.lengthSq() > 1e-6) {
       const angle = Math.atan2(vel.current.x, vel.current.z);
       ref.current.rotation.y = angle;
-      // Re-center camera angle offset when character moves
-      angleOffset.current = THREE.MathUtils.lerp(angleOffset.current, 0, 0.1);
     }
 
-    const defaultRadius = Math.sqrt(2.2 * 2.2 + 2.6 * 2.6);
-    const defaultTheta = Math.atan2(2.6, -2.2);
-    const currentTheta = defaultTheta + angleOffset.current;
+    /* ── Third-person follow camera (always behind character) ── */
+    const followDistance = 3.4;
+    const followHeight = 2.0;
+
+    // The target camera angle is directly behind the character + manual drag offset
+    const targetAngle = ref.current.rotation.y + Math.PI + angleOffset.current;
+    // Smoothly lerp the camera's orbit angle toward the target
+    cameraAngle.current = THREE.MathUtils.lerp(cameraAngle.current, targetAngle, 0.06);
 
     const desired = new THREE.Vector3(
-      ref.current.position.x + Math.cos(currentTheta) * defaultRadius,
-      1.6,
-      ref.current.position.z + Math.sin(currentTheta) * defaultRadius
+      ref.current.position.x + Math.sin(cameraAngle.current) * followDistance,
+      ref.current.position.y + followHeight,
+      ref.current.position.z + Math.cos(cameraAngle.current) * followDistance
     );
-    camera.position.lerp(desired, 0.1);
-    camera.lookAt(
+    camera.position.lerp(desired, 0.08);
+
+    // Look slightly above the character
+    const lookTarget = new THREE.Vector3(
       ref.current.position.x,
-      ref.current.position.y + 0.6,
+      ref.current.position.y + 0.5,
       ref.current.position.z
     );
+    camera.lookAt(lookTarget);
+
+    /* ── Gradually reset drag offset so camera re-centers behind character ── */
+    angleOffset.current = THREE.MathUtils.lerp(angleOffset.current, 0, 0.02);
 
     const now = state.clock.getElapsedTime();
     if (onMove && now - lastSent.current > 0.1) {

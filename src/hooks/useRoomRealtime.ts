@@ -41,6 +41,15 @@ export type RoomMessage = {
   timestamp: number;
 };
 
+export type PlayerState = {
+  url: string;
+  isPlaying: boolean;
+  position: number;
+  updatedAt: number;
+  updatedBy: string;
+};
+
+
 /**
  * Real-time room hook.
  *
@@ -56,6 +65,7 @@ export function useRoomRealtime(
   const [selfId, setSelfId] = useState<string | null>(null);
   const [users, setUsers] = useState<Record<string, RoomUser>>({});
   const [messages, setMessages] = useState<RoomMessage[]>([]);
+  const [playerState, setPlayerState] = useState<PlayerState | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const [ping, setPing] = useState<number | null>(null);
 
@@ -260,6 +270,30 @@ export function useRoomRealtime(
     return () => unsub();
   }, [roomId]);
 
+  /* ──────── 6. Subscribe to player state ──────── */
+
+  useEffect(() => {
+    if (!roomId) return;
+
+    const playerRef = ref(rtdb, `rooms/${roomId}/player`);
+    const unsub = onValue(playerRef, (snap) => {
+      const data = snap.val();
+      if (!data) {
+        setPlayerState(null);
+        return;
+      }
+      setPlayerState({
+        url: data.url || "",
+        isPlaying: data.isPlaying || false,
+        position: data.position || 0,
+        updatedAt: data.updatedAt || 0,
+        updatedBy: data.updatedBy || "",
+      });
+    });
+
+    return () => unsub();
+  }, [roomId]);
+
   /* ──────── Derived: partner ──────── */
 
   const partner = useMemo(() => {
@@ -334,16 +368,37 @@ export function useRoomRealtime(
     [roomId, selfId]
   );
 
+  const updatePlayer = useCallback(
+    async (newState: Partial<Omit<PlayerState, "updatedAt" | "updatedBy">>) => {
+      if (!roomId || !selfId) return;
+      
+      // Get current state to merge
+      const playerRef = ref(rtdb, `rooms/${roomId}/player`);
+      const snap = await get(playerRef);
+      const current = snap.val() || {};
+      
+      await update(playerRef, {
+        ...current,
+        ...newState,
+        updatedAt: Date.now(),
+        updatedBy: selfId,
+      }).catch(() => {});
+    },
+    [roomId, selfId]
+  );
+
   return {
     selfId,
     users,
     partner,
     messages,
+    playerState,
     isConnected,
     ping,
     updatePosition,
     sendMessage,
     updateName,
     updateEnvironment,
+    updatePlayer,
   };
 }
